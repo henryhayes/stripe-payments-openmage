@@ -7,7 +7,7 @@
   },
   "extra":{
     "map": [
-      ["src/app/", "app/"]
+      ["src/app/", "app/"],
       ["src/skin/", "skin/"]
     ]
   }
