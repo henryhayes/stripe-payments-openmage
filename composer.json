@@ -1,0 +1,14 @@
+{
+  "name":"henryhayes/stripe-payments-openmage",
+  "type":"magento-module",
+  "description":"Stripe payments for OpenMage 1.9.x",
+  "require":{
+    "magento-hackathon/magento-composer-installer":"*"
+  },
+  "extra":{
+    "map": [
+      ["src/app/", "app/"]
+      ["src/skin/", "skin/"]
+    ]
+  }
+}
