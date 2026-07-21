@@ -514,16 +514,30 @@ class Stripe_Payments_Model_PaymentIntent
         );
     }
 
+    /**
+     * Updated Trigger Authentication method that now correctly throws Stripe_Payments_Exception_AuthenticationRequired
+     * which extends Mage_Payment_Model_Info_Exception and therefore does not trigger the failed payement email.
+     *
+     * @param array $piSecrets
+     * @param Mage_Sales_Model_Order $order
+     * @param Mage_Sales_Model_Order_Payment $payment
+     * @throws Mage_Core_Exception
+     * @throws Stripe_Payments_Exception_AuthenticationRequired
+     */
     public function triggerAuthentication($piSecrets, $order, $payment)
     {
-        if (count($piSecrets) > 0)
-        {
-            if ($this->helper->isAdmin())
-                Mage::throwException("This card cannot be used because it requires a 3D Secure authentication by the customer.");
-
-            // Front-end checkout case, this will trigger the 3DS modal.
-            Mage::throwException("Authentication Required: " . implode(",", $piSecrets));
+        if (count($piSecrets) <= 0) {
+            return;
         }
+
+        if ($this->helper->isAdmin()) {
+            Mage::throwException("This card cannot be used because it requires a 3D Secure authentication by the customer.");
+        }
+
+        // Front-end checkout case, this will trigger the 3DS modal.
+        throw new Stripe_Payments_Exception_AuthenticationRequired(
+            "Authentication Required: " . implode(",", $piSecrets)
+        );
     }
 
     public function redirectToMultiShippingAuthorizationPage($payment, $paymentIntentId)
